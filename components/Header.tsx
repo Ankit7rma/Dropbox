@@ -1,6 +1,7 @@
 import { SignInButton, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import { ModeToggle } from "./Toggler";
 
 const Header = () => {
   return (
@@ -18,7 +19,7 @@ const Header = () => {
         <h1 className="text-2xl font-bold ">Dropbox</h1>
       </Link>
       <div className="flex items-center space-x-2">
-        {/*theme toggler*/}
+        <ModeToggle />
         <UserButton afterSignOutUrl="/" />
         <SignedOut>
           <SignInButton afterSignInUrl="/dashboard" mode="modal" />
