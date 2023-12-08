@@ -20,7 +20,7 @@ export default function Home() {
             instantly.
           </p>
         </div>
-        <div className="flex w-full md:px-20 m-7">
+        <div className="flex w-full md:px-20 m-7 justify-around">
           <Link
             href="/dashboard"
             className="flex cursor-pointer bg-blue-700 h-7 rounded-md"
@@ -28,8 +28,7 @@ export default function Home() {
             Try Here for Free
             <ArrowRight />
           </Link>
-        </div>
-        <div>
+
           <iframe
             width="560"
             height="315"
