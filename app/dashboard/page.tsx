@@ -1,5 +1,6 @@
 import { db } from "@/Firebase";
 import DropZone from "@/components/DropZone";
+import TableWrapper from "@/components/table/TableWrapper";
 import { FileType } from "@/typings";
 import { auth } from "@clerk/nextjs";
 import { collection, getDocs } from "firebase/firestore";
@@ -19,8 +20,14 @@ async function Dashboard() {
 
   console.log(skeletonFiles);
   return (
-    <div className="text-red-300 dark:text-blue-800 flex flex-col justify-center items-center">
+    <div className="border-t ">
       <DropZone />
+      <section className="container space-y-5">
+        <h2 className="font-bold">All Files</h2>
+        <div>
+          <TableWrapper skeletonFiles={skeletonFiles} />
+        </div>
+      </section>
     </div>
   );
 }
