@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { Button } from "@/components/ui/button";
 import { UserButton } from "@clerk/nextjs";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -22,13 +23,15 @@ export default function Home() {
           </p>
         </div>
         <div className="flex flex-wrap w-full md:px-20 m-7 justify-around">
-          <Link
-            href="/dashboard"
-            className="flex cursor-pointer bg-blue-700 h-7 rounded-md"
-          >
-            Try Here for Free
-            <ArrowRight />
-          </Link>
+          <Button>
+            <Link
+              href="/dashboard"
+              className="flex cursor-pointer bg-blue-700 h-9 justify-center items-center rounded-md w-full"
+            >
+              Try Here for Free
+              <ArrowRight />
+            </Link>
+          </Button>
           <div className="aspect-w-16 aspect-h-9 mt-5">
             <iframe
               width="full"
