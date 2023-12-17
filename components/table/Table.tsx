@@ -18,6 +18,8 @@ import {
 import { FileType } from "@/typings";
 import { Button } from "../ui/button";
 import { PencilIcon, TrashIcon } from "lucide-react";
+import { useAppStore } from "@/store/store";
+import { DeleteModal } from "../ui/DeleteModal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -33,6 +35,24 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const [setIsDeleteModalOpen, setFileId, setFileName, setIsRenameModalOpen] =
+    useAppStore((state) => [
+      state.setIsDeleteModalOpen,
+      state.setFileId,
+      state.setFilename,
+      state.setIsRenameModalOpen,
+    ]);
+
+  const openDeleteModal = (fileId: string) => {
+    setFileId(fileId);
+    setIsDeleteModalOpen(true);
+  };
+  const openRenameModal = (fileId: string, filename: string) => {
+    setFileId(fileId);
+    setFileName(filename);
+    setIsRenameModalOpen(true);
+  };
 
   return (
     <div className="rounded-md border">
@@ -62,6 +82,7 @@ export function DataTable<TData, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
+                <DeleteModal />
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {cell.column.id === "timestamp" ? (
@@ -76,7 +97,10 @@ export function DataTable<TData, TValue>({
                     ) : cell.column.id == "filename" ? (
                       <p
                         onClick={() => {
-                          console.log("hello");
+                          openRenameModal(
+                            (row.original as FileType).id,
+                            (row.original as FileType).filename
+                          );
                         }}
                         className="underline flex items-center text-blue-500 hover:cursor-pointer"
                       >
@@ -89,7 +113,12 @@ export function DataTable<TData, TValue>({
                   </TableCell>
                 ))}
                 <TableCell key={(row.original as FileType).id}>
-                  <Button variant={"outline"}>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      openDeleteModal((row.original as FileType).id);
+                    }}
+                  >
                     <TrashIcon size={20} />
                   </Button>
                 </TableCell>
