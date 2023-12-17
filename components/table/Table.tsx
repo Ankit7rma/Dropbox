@@ -15,6 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { FileType } from "@/typings";
+import { Button } from "../ui/button";
+import { PencilIcon, TrashIcon } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -61,9 +64,35 @@ export function DataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {cell.column.id === "timestamp" ? (
+                      <div className="flex flex-col">
+                        <div className="text-sm">
+                          {(cell.getValue() as Date).toLocaleDateString()}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {(cell.getValue() as Date).toLocaleTimeString()}
+                        </div>
+                      </div>
+                    ) : cell.column.id == "filename" ? (
+                      <p
+                        onClick={() => {
+                          console.log("hello");
+                        }}
+                        className="underline flex items-center text-blue-500 hover:cursor-pointer"
+                      >
+                        {cell.getValue() as string}{" "}
+                        <PencilIcon size={15} className="ml-2" />
+                      </p>
+                    ) : (
+                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                    )}
                   </TableCell>
                 ))}
+                <TableCell key={(row.original as FileType).id}>
+                  <Button variant={"outline"}>
+                    <TrashIcon size={20} />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))
           ) : (
