@@ -1,4 +1,5 @@
 "use client";
+import { db, storage } from "@/Firebase";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,17 +12,39 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAppStore } from "@/store/store";
+import { useUser } from "@clerk/nextjs";
+import { deleteDoc, doc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 
 export function DeleteModal() {
-  const [isDeleteModalOpen, setIsDeleteModalOpen, setFileId, setFileName] =
+  const { user } = useUser();
+  const [isDeleteModalOpen, setIsDeleteModalOpen, fileId, setFileId] =
     useAppStore((state) => [
       state.isDeleteModalOpen,
       state.setIsDeleteModalOpen,
+      state.fileId,
       state.setFileId,
-      state.setFilename,
     ]);
+  async function deleteFile() {
+    if (!user || !fileId) return;
 
-  async function deleteFile() {}
+    const fileRef = ref(storage, `users/${user.id}/files/${fileId}`);
+
+    try {
+      deleteObject(fileRef)
+        .then(async () => {
+          deleteDoc(doc(db, "users", user.id, "files", fileId)).then(() => {
+            console.log("Deleted");
+          });
+        })
+        .finally(() => {
+          setIsDeleteModalOpen(false);
+        });
+    } catch (error) {
+      console.log(error);
+      setIsDeleteModalOpen(false);
+    }
+  }
 
   return (
     <Dialog
@@ -56,13 +79,6 @@ export function DeleteModal() {
             <span>Delete</span>
           </Button>
         </div>
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
